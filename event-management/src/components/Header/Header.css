@@ -1,0 +1,7 @@
+.headerbg {
+    background-color: rgb(39, 32, 54);
+  }
+  .list-inline li{
+    display: inline;
+    text-decoration: none;
+  }

@@ -1,0 +1,28 @@
+.bg-grey {
+    background-color: #B9B9B9;
+}
+.eventList .col-md-4 {
+margin-bottom: 20px;
+}
+
+.eventManagement h4 {
+    display: inline;
+}
+
+.eventManagement button {
+    float: right;
+}
+.eventCardsBody {
+    padding: 0px !important;
+}
+.eventCardsTitle {
+    margin-bottom: .75rem;
+    padding: 15px;
+    background-color: rgb(39, 32, 54);
+    color: #fff;
+    font-weight: 600;
+    text-align: center;
+}
+.eventCardsText {
+    padding: 15px;
+}
