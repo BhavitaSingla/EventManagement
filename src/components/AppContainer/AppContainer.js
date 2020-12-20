@@ -1,10 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, Button, Modal, Form } from "react-bootstrap";
 const AppContainer = () => {
+
     var eventListObject = {
         eventArray: []
     };
-    var eventListItems = [];
+    const [eventListItems, setEventListItems] = useState([]);
+
     const [show, setShow] = useState(false);
     const [validated, setValidated] = useState(false);
 
@@ -32,13 +34,21 @@ const AppContainer = () => {
         setDiscount(e.target.value)
     }
 
-    const [selectFilter, setFilter] = useState("");
-
-    const handleFilterData = (e) => {
-        setFilter(e.target.value);
+    const [selectFilter, setSelectFilter] = useState("");
+    useEffect(() => {
         if (selectFilter !== '') {
             getFilterData(selectFilter);
         }
+    }, [selectFilter])
+
+    useEffect(() => {
+        getEventList()
+    }, [])
+
+    const handleFilterData = (e) => {
+        setSelectFilter(e.target.value);
+        console.log(selectFilter);
+
     }
 
     var eventObject = {
@@ -53,31 +63,36 @@ const AppContainer = () => {
     const getEventList = () => {
         if (localStorage.getItem('eventListObject')) {
             eventListObject = JSON.parse(localStorage.getItem('eventListObject'));
-            eventListItems = eventListObject.eventArray;
+            setEventListItems([...eventListObject.eventArray])
         }
 
     }
+
 
     const getFilterData = (value) => {
         if (value === 'all') {
             if (localStorage.getItem('eventListObject')) {
                 eventListObject = JSON.parse(localStorage.getItem('eventListObject'));
-                eventListItems = eventListObject.eventArray;
+                setEventListItems([...eventListObject.eventArray])
+
             }
         } else if (value === 'free') {
             if (localStorage.getItem('eventListObject')) {
-                eventListObject = JSON.parse(localStorage.getItem('eventListObject')).eventArray;
-                // eventListItems = eventListObject.eventArray;
+                eventListObject = JSON.parse(localStorage.getItem('eventListObject'));
+                let tempListItems = eventListObject.eventArray.filter((item) => item.discount == '100');
+                setEventListItems([...tempListItems]);
             }
         } else if (value === 'discount') {
             if (localStorage.getItem('eventListObject')) {
-                eventListObject = JSON.parse(localStorage.getItem('eventListObject')).eventArray;
-                // eventListItems = eventListObject.eventArray;
+                eventListObject = JSON.parse(localStorage.getItem('eventListObject'));
+                let tempListItems = eventListObject.eventArray.filter((item) => item.discount > 0 && item.discount < 100);
+                setEventListItems([...tempListItems]);
             }
         } else if (value === 'noDiscount') {
             if (localStorage.getItem('eventListObject')) {
-                eventListObject = JSON.parse(localStorage.getItem('eventListObject')).eventArray;
-                // eventListItems = eventListObject.eventArray;
+                eventListObject = JSON.parse(localStorage.getItem('eventListObject'));
+                let tempListItems = eventListObject.eventArray.filter((item) => item.discount == 0);
+                setEventListItems([...tempListItems]);
             }
         }
     }
@@ -112,7 +127,6 @@ const AppContainer = () => {
         };
         setShow(false);
     };
-    getEventList();
 
 
     return (
@@ -143,17 +157,17 @@ const AppContainer = () => {
 
 
             <div className="row bg-grey mt-20 pd-15 eventList">
-                {eventListItems.map(key => (
+                {eventListItems.map((key, i) => (
 
-                    <div className="col-md-4">
+                    <div className="col-md-4" key={i}>
                         <Card>
                             <Card.Body className="eventCardsBody">
                                 <Card.Title className="eventCardsTitle">{key.eventName}</Card.Title>
-                                <Card.Text className="eventCardsText">
-                                    <p><span className="font-bold">Description:</span> {key.description}</p>
-                                    <p><span className="font-bold">Venue: </span>{key.venue}</p>
-                                    <p><span className="font-bold">Price: </span>{key.price}</p>
-                                    <p><span className="font-bold">Discount:</span> {key.discount}</p>
+                                <Card.Text className="eventCardsText d-flex flex-column">
+                                    <div> <span className="font-bold">Description:</span>{key.description}</div>
+                                    <div><span className="font-bold">Venue: </span>{key.venue}</div>
+                                    <div><span className="font-bold">Price: </span>{key.price}</div>
+                                    <div><span className="font-bold">Discount:</span> {key.discount}</div>
                                 </Card.Text>
                             </Card.Body>
                         </Card>
